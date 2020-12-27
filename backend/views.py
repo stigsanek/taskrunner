@@ -19,6 +19,7 @@ def api_root(request, format=None):
 
 
 class TaskList(generics.ListCreateAPIView):
+    filterset_fields = ['close_date', 'is_complete', 'is_important']
     serializer_class = TaskSerializer
     permission_classes = [permissions.IsAuthenticated]
 
