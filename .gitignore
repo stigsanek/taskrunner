@@ -4,6 +4,8 @@ Thumbs.db
 .idea/
 .vscode/
 
+build/
+
 node_modules/
 
 __pycache__/
