@@ -1,7 +1,7 @@
 import json
 
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.views.decorators.csrf import ensure_csrf_cookie
 from rest_framework import generics
 from rest_framework import permissions
@@ -21,7 +21,7 @@ def set_csrf_token(request, format=None):
 
 
 @api_view(['POST'])
-def auth(request, format=None):
+def login_user(request, format=None):
     if request.user.is_authenticated:
         return Response({'details': 'You are already signed in'}, status=200)
     else:
@@ -40,6 +40,12 @@ def auth(request, format=None):
             return Response({'details': 'Success'}, status=200)
 
         return Response({'details': 'Invalid credentials'}, status=200)
+
+
+@api_view(['GET'])
+def logout_user(request, format=None):
+    logout(request)
+    return Response({'details': 'Success'}, status=200)
 
 
 @api_view(['GET'])
