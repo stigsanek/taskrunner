@@ -1,4 +1,8 @@
+import json
+
 from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login
+from django.views.decorators.csrf import ensure_csrf_cookie
 from rest_framework import generics
 from rest_framework import permissions
 from rest_framework.decorators import api_view
@@ -8,6 +12,34 @@ from rest_framework.reverse import reverse
 from .models import Task
 from .permissions import IsOwner
 from .serializers import TaskSerializer, UserSerializer
+
+
+@ensure_csrf_cookie
+@api_view(['GET'])
+def set_csrf_token(request, format=None):
+    return Response({'details': 'CSRF cookie set'}, status=200)
+
+
+@api_view(['POST'])
+def auth(request, format=None):
+    if request.user.is_authenticated:
+        return Response({'details': 'You are already signed in'}, status=200)
+    else:
+        data = json.loads(request.body)
+
+        try:
+            username = data['username']
+            password = data['password']
+        except KeyError:
+            return Response({'errors': {'__all__': 'Please enter username and password'}}, status=400)
+
+        user = authenticate(username=username, password=password)
+
+        if user is not None:
+            login(request, user)
+            return Response({'details': 'Success'}, status=200)
+
+        return Response({'details': 'Invalid credentials'}, status=200)
 
 
 @api_view(['GET'])

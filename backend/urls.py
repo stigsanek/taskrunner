@@ -6,7 +6,9 @@ from . import views
 app_name = 'backend'
 
 urlpatterns = [
-    path('', views.api_root),
+    path('', views.api_root, name='root'),
+    path('set-csrf/', views.set_csrf_token, name='set-csrf-token'),
+    path('auth/', views.auth, name='auth'),
     path('tasks/', views.TaskList.as_view(), name='task-list'),
     path('tasks/<int:pk>/', views.TaskDetail.as_view(), name='task-detail'),
     path('user/', views.UserDetail.as_view(), name='user-detail'),
